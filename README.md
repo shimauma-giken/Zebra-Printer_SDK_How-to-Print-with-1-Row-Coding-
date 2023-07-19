@@ -4,6 +4,11 @@
 
 Link-OS SDKにはネットワークとUSB接続されているプリンタ向けに簡易に印刷処理の組み込みができるように「1行コードメソッド」が含まれている。本スレッドではそのメソッドの利用方法について概要を記載する。
 
+<br>
+<br>
+
+
+
 # 環境構築 (Zebra プリンタ)
 
 1. プリンタをネットワークに接続する。  
@@ -35,6 +40,8 @@ Link-OS SDKにはネットワークとUSB接続されているプリンタ向け
         ![Alt text](image-3.png)
 
 <br><br>
+
+
 
 # 環境構築（PC）
 
@@ -341,7 +348,9 @@ send コマンドでZPL印刷ができる。ZPLはファイルでも、直書き
 
 一般的によく利用される「プリンタが待機状態なら印刷する」処理を体験するプロセス。20行足らずでちょっとしたバッチ処理が作成できる。
 
-    <br>
+下記にサンプルバッチの実行方法を記載しているが、Powershell 上級者はps1拡張子で保存して実行してもOK。
+
+<br>
 
 
 
@@ -396,7 +405,7 @@ send コマンドでZPL印刷ができる。ZPLはファイルでも、直書き
         2023-07-16 01:03:25 > Send print job because printer status is Ready To Print
         2023-07-16 01:03:37 > Send print job because printer status is Ready To Print
 
-        ▲ 処理中にエラーを発生させた場合の例。
+    ▲ 処理途中にエラーを発生させた場合のログ。
 
     <br>
 
@@ -409,7 +418,7 @@ send コマンドでZPL印刷ができる。ZPLはファイルでも、直書き
 
 USB接続されたプリンタからも出力が可能。この場合、--driver オプションを付与すること。
 
-    <br>
+<br>
 
 1. プリンタドライバのプロパティ画面でドライバ名を取得する。下記画面の場合は「ZDesigner ZQ620 (ZPL)」
 
@@ -435,7 +444,9 @@ USB接続されたプリンタからも出力が可能。この場合、--driver
 
 # 応用2 - テンプレートとcsvを利用した印刷
 
-実際の現場ではデータベースやCSVなどから取得した可変データをテンプレートに代入して印刷することが多い。ZSDK_APIを利用した場合のサンプルを記載する。
+実際の現場ではデータベースやCSVなどから取得した可変データをテンプレートに代入して印刷することが多い。ZSDK_APIを利用した場合のサンプルを記載する。XMLを利用した印刷も可能。XMLの活用に興味がある方はHelpを参照。
+
+<br>
 
 1. テンプレートファイルをZebra Designer 3 Developer等を用いて作成する。
 
@@ -451,7 +462,7 @@ USB接続されたプリンタからも出力が可能。この場合、--driver
             ^A0N,50,50^FO0,500^FN5"Invoice Number"^FS
             ^XZ
 
-    ▲　FN1 ～ FN5（合計5つ）の変数データがある。 
+        ▲　FN1 ～ FN5（合計5つ）の変数データがある。 
 
     <br>
 
@@ -472,19 +483,19 @@ USB接続されたプリンタからも出力が可能。この場合、--driver
 
 1. 印刷コマンド例1、 CSVファイルを用いた印刷
 
-        > java -jar ..\lib\ZSDK_API.jar print 192.168.4.50 .\csv-data.csv --template .\csv-temp.zpl --csv
+        > java -jar ZSDK_API.jar print 192.168.4.50 .\csv-data.csv --template .\csv-temp.zpl --csv
 
         ★ csv データが代入されたラベルが合計3枚印刷される。
 
     <br>
 
-1. 印刷コマンド例1、 CSVデータを用いた印刷
+1. 印刷コマンド例2、 CSVデータを用いた印刷
 
 
-        >　java -jar ..\lib\ZSDK_API.jar print 192.168.4.50 "Zebra Techonologies Japan,Component 01,Shimauma,001-999,INV-001" --template .\csv-temp.zpl
+        >　java -jar ZSDK_API.jar print 192.168.4.50 "Zebra Techonologies Japan,Component 01,Shimauma,001-999,INV-001" --template .\csv-temp.zpl
         --csv
 
         Could not find file, interpreting second argument as data.
-        ▲ パラメータとして記載したCSVデータを印刷。
+        ★ パラメータとして記載したCSVデータを印刷。エラーではない。
 
 
