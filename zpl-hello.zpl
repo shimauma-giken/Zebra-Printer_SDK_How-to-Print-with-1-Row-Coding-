@@ -1,0 +1,1 @@
+^XA^A0N,50,50^F0,30,30^FDHello Link-OS SDK!!^FS^XZ
