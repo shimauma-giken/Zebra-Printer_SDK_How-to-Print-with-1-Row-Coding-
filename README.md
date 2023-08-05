@@ -451,7 +451,88 @@ USB接続されたプリンタからも出力が可能。この場合、--driver
     <br>
     <br>
 
-# 応用1 - バッチ処理を実行してみよう
+# 応用1 - テンプレートとcsvを利用した印刷
+
+実際の現場ではデータベースやCSVなどから取得した可変データをテンプレートに代入して印刷することが多い。ZSDK_APIを利用した場合のサンプルを記載する。XMLを利用した印刷も可能。XMLの活用に興味がある方はHelpを参照。
+
+<br>
+
+1. テンプレートファイルをZebra Designer 3 Developer等を用いて作成する。
+
+    本スレッドでは例として、下記のテンプレートを使用する。
+
+    - テンプレートファイル / csv-temp.zpl
+
+            ^XA^DFE:csv-temp.zpl^FS
+            ^A0N,50,50^CI28^FO0,100^FN1"Customer Name"^FS
+            ^A0N,50,50^FO0,150^FN2"Component Name"^FS
+            ^A0N,50,50^FO0,200^FN3"Vendor Name"^FS
+            ^A0N,50,50^FO0,250^FN4"Vendor ID"^FS
+            ^A0N,50,50^FO0,300^FN5"Invoice Number"^FS
+            ^XZ
+
+        ▲　FN1 ～ FN5（合計5つ）の変数データがある。 
+
+    <br>
+
+
+1. テンプレートファイルに合わせて、CSVデータを作成する。
+
+    本スレッドでは例として、下記のCSVデータを使用する。
+
+    - CSVデータ / csv-data.csv
+
+            Zebra Techonologies Japan,Component 01,Shimauma,001-999,INV-001
+            Zebra Techonologies Japan,Component 02,Shimauma,001-999,INV-002
+            Zebra Techonologies Japan,Component 03,Shimauma,001-999,INV-003
+        
+        ▲ テンプレートに合わせて5カラムのデータを作成
+
+    <br>
+
+1. 印刷コマンド例1、 CSVファイルを用いた印刷
+
+        > java -jar ZSDK_API.jar print 192.168.4.54 .\csv-data.csv --template .\csv-temp.zpl --csv
+
+        ★ csv データが代入されたラベルが合計3枚印刷される。
+
+    <br>
+
+
+1. 印刷コマンド例2、 CSVデータを用いた印刷
+
+
+        >　java -jar ZSDK_API.jar print 192.168.4.54 "Zebra Techonologies Japan,Component 01,Shimauma,001-999,INV-001" --template .\csv-temp.zpl
+        --csv
+
+        Could not find file, interpreting second argument as data.
+        ★ パラメータとして記載したCSVデータを印刷。エラーではない。
+
+    <br>
+    <br>
+
+# 応用2 - バッチ処理を作成し、実行してみよう
+
+1. テキストエディタ（メモ帳など）を開き、実行したいコマンドを記載する。
+
+    <br>
+
+
+1. ファイル名、sample.batとして、ZSDK_API.jar と同じフォルダに保存する。
+
+    ▽ 例、ファイル名：sample.bat
+
+        java -jar ZSDK_API.jar print 192.168.4.54 .\csv-data.csv --template .\csv-temp.zpl --csv
+
+    <br>
+
+1. sample.batを実行する。
+
+    <br>
+    <br>
+    
+
+# 応用2 - 高度なバッチ処理を実行してみよう
 
 一般的によく利用される「プリンタが待機状態なら印刷する」処理を体験するプロセス。20行足らずでちょっとしたバッチ処理が作成できる。
 
@@ -529,60 +610,5 @@ USB接続されたプリンタからも出力が可能。この場合、--driver
     <br>
 
 
-# 応用2 - テンプレートとcsvを利用した印刷
-
-実際の現場ではデータベースやCSVなどから取得した可変データをテンプレートに代入して印刷することが多い。ZSDK_APIを利用した場合のサンプルを記載する。XMLを利用した印刷も可能。XMLの活用に興味がある方はHelpを参照。
-
-<br>
-
-1. テンプレートファイルをZebra Designer 3 Developer等を用いて作成する。
-
-    本スレッドでは例として、下記のテンプレートを使用する。
-
-    - テンプレートファイル / csv-temp.zpl
-
-            ^XA^DFE:csv-temp.zpl^FS
-            ^A0N,50,50^CI28^FO0,100^FN1"Customer Name"^FS
-            ^A0N,50,50^FO0,150^FN2"Component Name"^FS
-            ^A0N,50,50^FO0,200^FN3"Vendor Name"^FS
-            ^A0N,50,50^FO0,250^FN4"Vendor ID"^FS
-            ^A0N,50,50^FO0,300^FN5"Invoice Number"^FS
-            ^XZ
-
-        ▲　FN1 ～ FN5（合計5つ）の変数データがある。 
-
-    <br>
-
-
-1. テンプレートファイルに合わせて、CSVデータを作成する。
-
-    本スレッドでは例として、下記のCSVデータを使用する。
-
-    - CSVデータ / csv-data.csv
-
-            Zebra Techonologies Japan,Component 01,Shimauma,001-999,INV-001
-            Zebra Techonologies Japan,Component 02,Shimauma,001-999,INV-002
-            Zebra Techonologies Japan,Component 03,Shimauma,001-999,INV-003
-        
-        ▲ テンプレートに合わせて5カラムのデータを作成
-
-    <br>
-
-1. 印刷コマンド例1、 CSVファイルを用いた印刷
-
-        > java -jar ZSDK_API.jar print 192.168.4.54 .\csv-data.csv --template .\csv-temp.zpl --csv
-
-        ★ csv データが代入されたラベルが合計3枚印刷される。
-
-    <br>
-
-1. 印刷コマンド例2、 CSVデータを用いた印刷
-
-
-        >　java -jar ZSDK_API.jar print 192.168.4.54 "Zebra Techonologies Japan,Component 01,Shimauma,001-999,INV-001" --template .\csv-temp.zpl
-        --csv
-
-        Could not find file, interpreting second argument as data.
-        ★ パラメータとして記載したCSVデータを印刷。エラーではない。
 
 
